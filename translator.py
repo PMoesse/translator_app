@@ -2,15 +2,11 @@ import streamlit as st
 from PIL import Image
 import os
 import base64
-import easyocr
 import numpy as np
 from googletrans import Translator
 from gtts import gTTS
 from textblob import TextBlob
 from language_tool_python import LanguageTool
-
-# pip install infobip-api-python-sdk
-# from playsound import playsound
 
 # Configuration de la page
 st.set_page_config(
@@ -20,12 +16,9 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items={
         'Get help': "mailto:pauladeola@outlook.fr",
-        'About': "FIRE AND ACCIDENT DECTECTION SYSTEM BY COMPUTER VISION. \
+        'About': "TRANSLATOR. \
                  This is an *extremely* cool app! \
-                 This app built with YOLOv8 and Streamlit is a fire and accident detection app. \
-                 It can detect the fire or accident on  image or in real-time (using camera). \
-                 His goal is to detect quickly fire or accident and alert to avoid damages \
-                 \nAuthor: Moesse DJEKINNOU / School: DIT \
+                 \nAuthor: Moesse DJEKINNOU /
                  \nContact: +225-05-65-69-40-82 / \nMail: pauladeola@outlook.fr",
         'Report a bug': "mailto:pauladeola@outlook.fr"
     }
@@ -70,7 +63,6 @@ def load_img(uploaded_file):
 @st.cache_data
 def read_img(image, lang):
     import easyocr
-    import cv2
     # Créer un objet EasyOCR
     ocr = easyocr.Reader([lang])
     # Appliquer OCR à l'image
