@@ -18,7 +18,7 @@ st.set_page_config(
         'Get help': "mailto:pauladeola@outlook.fr",
         'About': "TRANSLATOR. \
                  This is an *extremely* cool app! \
-                 \nAuthor: Moesse DJEKINNOU /
+                 \nAuthor: Moesse DJEKINNOU \
                  \nContact: +225-05-65-69-40-82 / \nMail: pauladeola@outlook.fr",
         'Report a bug': "mailto:pauladeola@outlook.fr"
     }
