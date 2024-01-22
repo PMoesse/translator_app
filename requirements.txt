@@ -1,5 +1,4 @@
-base64
-numpy
+numpy==1.26.3
 googletrans==4.0.0-rc1
-gtts 
-language_tool_python
+gTTS==2.5.0
+language-tool-python==2.7.1
