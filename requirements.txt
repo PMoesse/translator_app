@@ -1,0 +1,7 @@
+streamlit
+os
+base64
+numpy
+googletrans==4.0.0-rc1
+gtts 
+language_tool_python
