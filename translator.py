@@ -5,7 +5,6 @@ import base64
 import numpy as np
 from googletrans import Translator
 from gtts import gTTS
-from textblob import TextBlob
 from language_tool_python import LanguageTool
 
 # Configuration de la page
