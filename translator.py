@@ -23,7 +23,7 @@ st.set_page_config(
     }
 )
 
-st.image('https://raw.githubusercontent.com/summermp/pisa22/main/static/img/banner/merry_christmas.gif', width=1300)
+st.image('https://raw.githubusercontent.com/summermp/pisa22/main/static/img/banner/merry_christmas.gif', width=1200)
 
 # Style pour le titre de la page
 st.markdown(
