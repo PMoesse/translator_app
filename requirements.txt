@@ -3,3 +3,5 @@ numpy==1.26.3
 googletrans==4.0.0-rc1
 gTTS==2.5.0
 language-tool-python==2.7.1
+easyocr==1.7.1
+pillow==10.2.0
