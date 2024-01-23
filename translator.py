@@ -74,13 +74,19 @@ def read_img(image, lang):
 #Traduire le texte
 @st.cache_resource
 def translate(input:str, src, dest):
-    blob = TextBlob(input)
-    try:
-        output = blob.translate(from_lang=src, to=dest)
-        #st.write(f"Texte traduit : {output}")
-        return str(output)
-    except Exception as e:
-        st.error(f"Erreur lors de la traduction : {e}")
+    from textblob import TextBlob
+    # Vérifier si la langue source est différente de la langue cible
+    if src != dest:
+        # Créer une instance de TextBlob avec le texte d'origine
+        blob = TextBlob(input)
+        # Traduire le texte
+        try:
+            output = blob.translate(from_lang=src, to=dest)
+        except Exception as e:
+            st.error(f"Erreur lors de la traduction : {e}")
+    else:
+        output = input
+    return str(output)
         
 @st.cache_data
 def read_audio(text_to_read, lang):
