@@ -7,6 +7,7 @@ import numpy as np
 from googletrans import Translator
 from gtts import gTTS
 from language_tool_python import LanguageTool
+from textblob import TextBlob
 
 # Configuration de la page
 st.set_page_config(
@@ -73,9 +74,14 @@ def read_img(image, lang):
 #Traduire le texte
 @st.cache_resource
 def translate(input:str, src, dest):
-    trans=Translator()
-    output = trans.translate(input, src=src, dest=dest).text
-    return output
+    blob = TextBlob(input)
+    try:
+        output = blob.translate(from_lang=src, to=dest)
+        #st.write(f"Texte traduit : {output}")
+        return str(output)
+    except Exception as e:
+        st.error(f"Erreur lors de la traduction : {e}")
+        
 @st.cache_data
 def read_audio(text_to_read, lang):
     import io
@@ -97,16 +103,6 @@ def show_image(path: str):
     data_url = base64.b64encode(contents).decode("utf-8")
     file_.close()
     return data_url
-
-#correction du texte (optionnel)
-#def correct(_texte, lang):
-#    if lang=='en':
-#        lang='en-US'
-#    tool = LanguageTool(lang)  # Spécifiez la langue française
-#    corrections = tool.correct(_texte)
-#    #blob = TextBlob(_texte)
-#    #corrections = blob.correct()
-#    return str(corrections)
 
 def show_translate(translation, text_translate):
     translation.markdown(f'''
