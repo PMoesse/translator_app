@@ -5,3 +5,5 @@ gTTS==2.5.0
 language-tool-python==2.7.1
 easyocr==1.7.1
 pillow==10.2.0
+textblob
+textblob-fr==0.2.0
