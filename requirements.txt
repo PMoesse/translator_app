@@ -5,4 +5,5 @@ language-tool-python==2.7.1
 easyocr==1.7.1
 textblob
 SpeechRecognition==3.10.1
-PyAudio
+PyAudio==0.2.14
+portaudio19-dev
