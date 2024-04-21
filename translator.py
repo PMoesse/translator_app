@@ -290,12 +290,15 @@ with tab2:
         #file=st.audio()
         #uploaded_file = st.file_uploader("Choose a file")
         #text_to_translate.write()
-        speak_button=st.button("Speak")
-
-        if speak_button:
-            st.session_state.transcription=listen_audio(languages[input_lang])
+        
+        import speech_recognition as sr
+        r = sr.Recognizer()
         for index, name in enumerate(sr.Microphone.list_microphone_names()):
             st.write("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
+            
+        speak_button=st.button("Speak")
+        if speak_button:
+            st.session_state.transcription=listen_audio(languages[input_lang])
         text_to_translate = st.text_area(label="You said: ", value=st.session_state.transcription, height=400, key="textarea_id2")
         btn_translate = st.button("Translate", type="primary")  # affiche le bouton translate
         with col3:
