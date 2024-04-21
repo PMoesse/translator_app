@@ -132,7 +132,7 @@ def transcribes(wav_file):
         return text
 def listen_audio(lang):
     r=sr.Recognizer()
-    with sr.Microphone() as source:
+    with sr.Microphone(device_index=0) as source:
         r.adjust_for_ambient_noise(source)
         voix=r.listen(source, timeout=6)
         if lang=='fr':
