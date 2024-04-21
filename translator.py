@@ -294,6 +294,8 @@ with tab2:
 
         if speak_button:
             st.session_state.transcription=listen_audio(languages[input_lang])
+        for index, name in enumerate(sr.Microphone.list_microphone_names()):
+            print("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
         text_to_translate = st.text_area(label="You said: ", value=st.session_state.transcription, height=400, key="textarea_id2")
         btn_translate = st.button("Translate", type="primary")  # affiche le bouton translate
         with col3:
@@ -370,8 +372,6 @@ with tab3:
                 st.audio(audio_bytes)
 
 # Pied de page
-for index, name in enumerate(sr.Microphone.list_microphone_names()):
-    st.markdown("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
 st.markdown('<div class="footer">© 2024 Translator / Moesse Djekinnou</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 # Affichage d'un cadre avec du contenu à l'intérieur
