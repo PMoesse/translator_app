@@ -132,9 +132,20 @@ def transcribes(wav_file):
         return text
 def listen_audio(lang):
     r=sr.Recognizer()
-    for index, name in enumerate(sr.Microphone.list_microphone_names()):
-        print("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
-     
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        voix=r.listen(source, timeout=6)
+        if lang=='fr':
+            lang='fr-FR'
+        elif lang=='en':
+            lang='en-US'
+        else :
+            lang='es-ES'
+        try:
+            result=r.recognize_google(voix,language=lang)
+        except Exception as ex:
+            result = ex
+    return (result)     
 
 # Nom du fichier MP3 d'entrée
 mp3_file = "galates.mp3"
@@ -359,6 +370,8 @@ with tab3:
                 st.audio(audio_bytes)
 
 # Pied de page
+for index, name in enumerate(sr.Microphone.list_microphone_names()):
+    st.markdown("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
 st.markdown('<div class="footer">© 2024 Translator / Moesse Djekinnou</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 # Affichage d'un cadre avec du contenu à l'intérieur
