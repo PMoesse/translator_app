@@ -6,3 +6,4 @@ easyocr==1.7.1
 textblob
 SpeechRecognition==3.10.1
 PyAudio==0.2.14
+pydub
