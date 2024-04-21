@@ -132,20 +132,9 @@ def transcribes(wav_file):
         return text
 def listen_audio(lang):
     r=sr.Recognizer()
-    with sr.Microphone(device_index=-1) as source:
-        r.adjust_for_ambient_noise(source)
-        voix=r.listen(source, timeout=6)
-        if lang=='fr':
-            lang='fr-FR'
-        elif lang=='en':
-            lang='en-US'
-        else :
-            lang='es-ES'
-        try:
-            result=r.recognize_google(voix,language=lang)
-        except Exception as ex:
-            result =ex
-    return (result)
+    for index, name in enumerate(sr.Microphone.list_microphone_names()):
+        result=("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
+    return result
 
 # Nom du fichier MP3 d'entrée
 mp3_file = "galates.mp3"
