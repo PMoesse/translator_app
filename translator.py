@@ -3,11 +3,15 @@ from PIL import Image
 import os
 import cv2
 import base64
+import easyocr
 import numpy as np
-from googletrans import Translator
+#from googletrans import Translator
 from gtts import gTTS
 from language_tool_python import LanguageTool
-from textblob import TextBlob
+import speech_recognition as sr
+
+# pip install infobip-api-python-sdk
+# from playsound import playsound
 
 # Configuration de la page
 st.set_page_config(
@@ -17,15 +21,18 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items={
         'Get help': "mailto:pauladeola@outlook.fr",
-        'About': "TRANSLATOR. \
+        'About': "FIRE AND ACCIDENT DECTECTION SYSTEM BY COMPUTER VISION. \
                  This is an *extremely* cool app! \
-                 \nAuthor: Moesse DJEKINNOU \
+                 This app built with YOLOv8 and Streamlit is a fire and accident detection app. \
+                 It can detect the fire or accident on  image or in real-time (using camera). \
+                 His goal is to detect quickly fire or accident and alert to avoid damages \
+                 \nAuthor: Moesse DJEKINNOU / School: DIT \
                  \nContact: +225-05-65-69-40-82 / \nMail: pauladeola@outlook.fr",
         'Report a bug': "mailto:pauladeola@outlook.fr"
     }
 )
 
-st.image('https://raw.githubusercontent.com/summermp/pisa22/main/static/img/banner/merry_christmas.gif', width=1200)
+st.image('https://raw.githubusercontent.com/summermp/pisa22/main/static/img/banner/merry_christmas.gif', width=1350)
 
 # Style pour le titre de la page
 st.markdown(
@@ -63,7 +70,6 @@ def load_img(uploaded_file):
 #Recupere le texte de l'image
 @st.cache_data
 def read_img(image, lang):
-    import easyocr
     # Créer un objet EasyOCR
     ocr = easyocr.Reader([lang])
     # Appliquer OCR à l'image
@@ -83,11 +89,21 @@ def translate(input:str, src, dest):
         try:
             output = blob.translate(from_lang=src, to=dest)
         except Exception as e:
-            st.error(f"Erreur lors de la traduction : {e}")
+            if e==' Translation API returned the input string unchanged.':
+                st.error("Erreur lors de la traduction : Le text saisi est deja dans la langue de sortie")
+                output=" "
+            else :
+                st.error(f"Erreur lors de la traduction : {e}")
+                output = " "
     else:
         output = input
     return str(output)
-        
+
+    #trans=Translator()
+    #output = trans.translate(input, src=src, dest=dest).text
+    #return output
+
+
 @st.cache_data
 def read_audio(text_to_read, lang):
     import io
@@ -101,6 +117,66 @@ def read_audio(text_to_read, lang):
     #display(Audio(audio_data.read(), autoplay=True))
     return audio_data
 
+import speech_recognition as sr
+from pydub import AudioSegment
+
+def convert_mp3_to_wav(mp3_file, wav_file):
+    audio = AudioSegment.from_mp3(mp3_file)
+    audio.export(wav_file, format="wav")
+
+def transcribes(wav_file):
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(wav_file) as source:
+        audio_data = recognizer.record(source)
+        text = recognizer.recognize_google(audio_data, language="en-US")
+        return text
+def listen_audio(lang):
+    r=sr.Recognizer()
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        voix=r.listen(source, timeout=6)
+        if lang=='fr':
+            lang='fr-FR'
+        elif lang=='en':
+            lang='en-US'
+        else :
+            lang='es-ES'
+        try:
+            result=r.recognize_google(voix,language=lang)
+        except Exception as ex:
+            result =ex
+    return (result)
+
+# Nom du fichier MP3 d'entrée
+mp3_file = "galates.mp3"
+
+# Nom du fichier WAV de sortie
+wav_file = "galates.wav"
+
+
+
+def transcribe(url) :
+    # Créer un objet Recognizer
+    recognizer = sr.Recognizer()
+
+    # Chemin vers le fichier audio
+    chemin_fichier_audio = url
+
+    # Charger le fichier audio
+    with sr.AudioFile(chemin_fichier_audio) as source:
+        # Utiliser record() pour capturer l'audio à partir du fichier
+        audio = recognizer.record(source)
+
+        try:
+            # Utiliser la reconnaissance vocale pour transcrire l'audio en texte
+            texte_transcrit = recognizer.recognize_google(audio, language="fr-FR")
+            return texte_transcrit
+        except sr.UnknownValueError:
+            print("Google Speech Recognition n'a pas pu comprendre l'audio")
+        except sr.RequestError as e:
+            print("Erreur lors de la requête à l'API Google Speech Recognition ; {0}".format(e))
+
+
 # show image: pour afficher des images statics (lire les images et ensuite les passer dans un markdown)
 @st.cache_data
 def show_image(path: str):
@@ -109,6 +185,21 @@ def show_image(path: str):
     data_url = base64.b64encode(contents).decode("utf-8")
     file_.close()
     return data_url
+@st.cache_resource
+def select_languages():
+    st.markdown('''<div> <h6 style= 'font-size:20px'>Select Languagues : </h6></div>''', unsafe_allow_html=True)
+    input_lang = st.selectbox("From", ("French", "English", "Spanish"), index=0, key='image')
+    output_lang = st.selectbox("To", ("French", "English", "Spanish"), index=1, key='image2')
+
+#correction du texte (optionnel)
+#def correct(_texte, lang):
+#    if lang=='en':
+#        lang='en-US'
+#    tool = LanguageTool(lang)  # Spécifiez la langue française
+#    corrections = tool.correct(_texte)
+#    #blob = TextBlob(_texte)
+#    #corrections = blob.correct()
+#    return str(corrections)
 
 def show_translate(translation, text_translate):
     translation.markdown(f'''
@@ -124,6 +215,8 @@ def show_translate(translation, text_translate):
 
 # mise en place du code
 languages = {'French': 'fr', 'English': 'en', 'Spanish': 'es'}
+if 'transcription' not in st.session_state:
+    st.session_state.transcription=""
 btn=True #Etat des boutons download et audio
 
 with tab1:
@@ -184,7 +277,54 @@ with tab1:
                 st.audio(audio_bytes)
 
 with tab2:
-    st.markdown('''<div> <h6 style= 'color: blue; font-size:20px'>In Building😴..... </h6></div>''', unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 3, 3])
+    with col1:
+        st.markdown('''<div> <h6 style= 'font-size:20px'>Select Languagues : </h6></div>''', unsafe_allow_html=True)
+        input_lang = st.selectbox("From", ("French", "English", "Spanish"), index=0, key='audio')
+        output_lang = st.selectbox("To", ("French", "English", "Spanish"), index=1, key='audio2')
+    with col2:
+        st.markdown('''<div> <h6 style= 'color: blue; font-size:20px'>Press speak button... </h6></div>''', unsafe_allow_html=True)
+        #audio_file = open('Alarme_sound.wav', 'rb')
+        #audio_bytes = audio_file.read()
+        #st.audio(audio_bytes, format='audio/ogg')
+        #file=st.audio()
+        #uploaded_file = st.file_uploader("Choose a file")
+        #text_to_translate.write()
+        speak_button=st.button("Speak")
+
+        if speak_button:
+            st.session_state.transcription=listen_audio(languages[input_lang])
+        text_to_translate = st.text_area(label="You said: ", value=st.session_state.transcription, height=400, key="textarea_id2")
+        btn_translate = st.button("Translate", type="primary")  # affiche le bouton translate
+        with col3:
+            msg_container2 = st.container(border=True)
+            msg_container2.write(f"##### Translation from {input_lang} to {output_lang}")
+            translation = st.markdown(f'''
+                        <div style='padding:5px 5px 400px 5px; margin-bottom:15px; border-radius:8px; background-color: #4285F4; color:white;'>
+                        </div>''', unsafe_allow_html=True)
+            btn1, btn2, btn3 = st.columns([3, 3, 2])
+            text_translate = translate(text_to_translate, languages[input_lang], languages[output_lang])
+            if btn_translate:
+
+                show_translate(translation, text_translate)
+                btn = False
+            btn_download = btn1.download_button('Download', text_translate, file_name='Translation.txt',
+                                                disabled=btn, key='image_download')
+            if btn_download:
+                show_translate(translation, text_translate)
+                btn = False
+            btn_audio = btn3.button("Play audio   ", disabled=btn)
+            if btn_audio:
+                show_translate(translation, text_translate)
+                audio_bytes = read_audio(text_translate, languages[output_lang])
+                st.audio(audio_bytes)
+        # Conversion du fichier MP3 en WAV
+        #convert_mp3_to_wav('galates.mp3', 'galate.wav')
+
+        # Transcription du fichier WAV
+        #resultat_transcription = transcribe('galate.wav')
+
+
 
 with tab3:
     col1, col2, col3 = st.columns([1, 3, 3])
@@ -199,6 +339,7 @@ with tab3:
         btn_translate = st.button("Translate", type="primary", key="text_translate")
         if len(text_entry) >0:
             msg_container.write("##### Type a text, Select languages and press Translate...")
+            st.write(text_entry ,':', len(text_entry))
             #texte_to_translate = correct(text_entry, languages[input_lang])
         else:
             msg_container.write("##### Waiting for text...")
