@@ -133,8 +133,8 @@ def transcribes(wav_file):
 def listen_audio(lang):
     r=sr.Recognizer()
     for index, name in enumerate(sr.Microphone.list_microphone_names()):
-        result=("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
-        return result
+        print=("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
+     
 
 # Nom du fichier MP3 d'entrée
 mp3_file = "galates.mp3"
