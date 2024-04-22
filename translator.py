@@ -278,7 +278,6 @@ with tab3:
         btn_translate = st.button("Translate", type="primary", key="text_translate")
         if len(text_entry) >0:
             msg_container.write("##### Type a text, Select languages and press Translate...")
-            st.write(text_entry ,':', len(text_entry))
             #texte_to_translate = correct(text_entry, languages[input_lang])
         else:
             msg_container.write("##### Waiting for text...")
