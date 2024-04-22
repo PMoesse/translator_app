@@ -264,50 +264,7 @@ with tab1:
                 show_translate(translation, text_translate)
                 audio_bytes=read_audio(text_translate, languages[output_lang])
                 st.audio(audio_bytes)
-"""
-with tab2:
-    col1, col2, col3 = st.columns([1, 3, 3])
-    with col1:
-        st.markdown('''<div> <h6 style= 'font-size:20px'>Select Languagues : </h6></div>''', unsafe_allow_html=True)
-        input_lang = st.selectbox("From", ("French", "English", "Spanish"), index=0, key='audio')
-        output_lang = st.selectbox("To", ("French", "English", "Spanish"), index=1, key='audio2')
-    with col2:
-        st.markdown('''<div> <h6 style= 'color: blue; font-size:20px'>Press speak button... </h6></div>''', unsafe_allow_html=True)
-        #audio_file = open('Alarme_sound.wav', 'rb')
-        #audio_bytes = audio_file.read()
-        #st.audio(audio_bytes, format='audio/ogg')
-        #file=st.audio()
-        #uploaded_file = st.file_uploader("Choose a file")
-        #text_to_translate.write()
-            
-        speak_button=st.button("Speak")
-        if speak_button:
-            st.session_state.transcription=listen_audio(languages[input_lang])
-        text_to_translate = st.text_area(label="You said: ", value=st.session_state.transcription, height=400, key="textarea_id2")
-        btn_translate = st.button("Translate", type="primary")  # affiche le bouton translate
-        with col3:
-            msg_container2 = st.container(border=True)
-            msg_container2.write(f"##### Translation from {input_lang} to {output_lang}")
-            translation = st.markdown(f'''
-                        <div style='padding:5px 5px 400px 5px; margin-bottom:15px; border-radius:8px; background-color: #4285F4; color:white;'>
-                        </div>''', unsafe_allow_html=True)
-            btn1, btn2, btn3 = st.columns([3, 3, 2])
-            text_translate = translate(text_to_translate, languages[input_lang], languages[output_lang])
-            if btn_translate:
 
-                show_translate(translation, text_translate)
-                btn = False
-            btn_download = btn1.download_button('Download', text_translate, file_name='Translation.txt',
-                                                disabled=btn, key='image_download')
-            if btn_download:
-                show_translate(translation, text_translate)
-                btn = False
-            btn_audio = btn3.button("Play audio   ", disabled=btn)
-            if btn_audio:
-                show_translate(translation, text_translate)
-                audio_bytes = read_audio(text_translate, languages[output_lang])
-                st.audio(audio_bytes)
-"""
 with tab3:
     col1, col2, col3 = st.columns([1, 3, 3])
     with col1:
