@@ -5,7 +5,7 @@ import cv2
 import base64
 import easyocr
 import numpy as np
-#from googletrans import Translator
+from googletrans import Translator
 from gtts import gTTS
 from language_tool_python import LanguageTool
 import speech_recognition as sr
@@ -81,10 +81,12 @@ def translate(input:str, src, dest):
     # Vérifier si la langue source est différente de la langue cible
     if src != dest:
         # Créer une instance de TextBlob avec le texte d'origine
-        blob = TextBlob(input)
+        #blob = TextBlob(input)
         # Traduire le texte
         try:
-            output = blob.translate(from_lang=src, to=dest)
+            trans = Translator()
+            output = trans.translate(input, src=src, dest=dest).text
+            #output = blob.translate(from_lang=src, to=dest)
         except Exception as e:
             if e==' Translation API returned the input string unchanged.':
                 st.error("Erreur lors de la traduction : Le text saisi est deja dans la langue de sortie")
