@@ -10,9 +10,6 @@ from gtts import gTTS
 from language_tool_python import LanguageTool
 import speech_recognition as sr
 
-# pip install infobip-api-python-sdk
-# from playsound import playsound
-
 # Configuration de la page
 st.set_page_config(
     page_title="Documents translator App",
@@ -147,14 +144,6 @@ def listen_audio(lang):
             result = ex
     return (result)     
 
-# Nom du fichier MP3 d'entrée
-mp3_file = "galates.mp3"
-
-# Nom du fichier WAV de sortie
-wav_file = "galates.wav"
-
-
-
 def transcribe(url) :
     # Créer un objet Recognizer
     recognizer = sr.Recognizer()
@@ -275,7 +264,7 @@ with tab1:
                 show_translate(translation, text_translate)
                 audio_bytes=read_audio(text_translate, languages[output_lang])
                 st.audio(audio_bytes)
-
+"""
 with tab2:
     col1, col2, col3 = st.columns([1, 3, 3])
     with col1:
@@ -290,11 +279,6 @@ with tab2:
         #file=st.audio()
         #uploaded_file = st.file_uploader("Choose a file")
         #text_to_translate.write()
-        
-        import speech_recognition as sr
-        r = sr.Recognizer()
-        for index, name in enumerate(sr.Microphone.list_microphone_names()):
-            st.write("Microphone with name \"{1}\" found for `Microphone(device_index={0})`".format(index, name))
             
         speak_button=st.button("Speak")
         if speak_button:
@@ -323,14 +307,7 @@ with tab2:
                 show_translate(translation, text_translate)
                 audio_bytes = read_audio(text_translate, languages[output_lang])
                 st.audio(audio_bytes)
-        # Conversion du fichier MP3 en WAV
-        #convert_mp3_to_wav('galates.mp3', 'galate.wav')
-
-        # Transcription du fichier WAV
-        #resultat_transcription = transcribe('galate.wav')
-
-
-
+"""
 with tab3:
     col1, col2, col3 = st.columns([1, 3, 3])
     with col1:
