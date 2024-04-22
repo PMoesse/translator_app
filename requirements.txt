@@ -3,8 +3,7 @@ numpy==1.26.3
 gTTS==2.5.0
 language-tool-python==2.7.1
 easyocr==1.7.1
-textblob
-textblob-translate
+textblob==0.18.0.post0
 SpeechRecognition==3.10.1
 PyAudio==0.2.14
 pydub
