@@ -7,3 +7,4 @@ textblob==0.18.0.post0
 SpeechRecognition==3.10.1
 PyAudio==0.2.14
 pydub
+googletrans==4.0.0-rc1
